@@ -43,7 +43,7 @@ public:
     }
 
     void updateBook(int bookId) {
-        for (Book& book: books) {
+        for (Book& book : books) {
             if (book.bookId == bookId) {
                 std::cout << "Update Book ID: " << bookId << "\n";
                 
@@ -58,8 +58,25 @@ public:
 
                 std::cout << "Enter new Quantity: ";
                 std::cin >> book.quantity;
+
+                saveDataToFile();
+                std::cout << "Book updated successfully!" << std::endl;
+                return;
             }
         }
+        std::cerr << "Book ID not found.\n";
+    }
+
+    void deleteBook (int bookId) {
+        for (auto it = books.begin(); it != books.end(); ++it) {
+            if (bookId == it->bookId) {
+                books.erase(it);
+                saveDataToFile();
+                std::cout << "Book deleted successfully!" << std::endl;
+                return;
+            }
+        }    
+        std::cerr << "Book ID not found.\n";
     }
 
     void displayAllBooks() const {
@@ -139,8 +156,10 @@ int main() {
 
     char choice;
     do {
-        std::cout << "Menu:\n1. Add Book\n2. Display All Books\n3. Update Book\n4. Exit\nEnter your choice: ";
+        std::cout << "Menu:\n1. Add Book\n2. Display All Books\n3. Update Book\n4. Delete Book\n5. Exit\nEnter your choice: ";
         std::cin >> choice;
+
+        int bookID;
 
         switch(choice) {
             case '1':
@@ -150,13 +169,18 @@ int main() {
                 bookshop.displayAllBooks();
                 break;
             case '3':
-                int bookID;
                 std::cout << "Enter Book ID to update: ";
                 std::cin >> bookID;
                 std::cin.ignore();
                 bookshop.updateBook(bookID);
                 break;
             case '4':
+                std::cout << "Enter Book ID to delete: ";
+                std::cin >> bookID;
+                std::cin.ignore();
+                bookshop.deleteBook(bookID);
+                break;
+            case '5':
                 std::cout << "Exiting the Bookshop Management System. Thank you!\n";
                 break;
             default:
